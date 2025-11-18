@@ -2,7 +2,8 @@ import React from 'react'
 import { useCustomers } from '../api/customers'
 
 export default function CustomerList() {
-  const { data: customers, isLoading, isError, refetch } = useCustomers()
+  // Start with automatic fetching disabled so the Load button triggers the fetch.
+  const { data: customers, isLoading, isError, refetch } = useCustomers({ enabled: false })
 
   return (
     <div className="bg-white p-4 rounded shadow">

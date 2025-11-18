@@ -17,8 +17,8 @@ async function postCustomer(payload: { name: string; email: string }) {
   return res.data as Customer
 }
 
-export function useCustomers() {
-  return useQuery(['customers'], fetchCustomers)
+export function useCustomers(options?: any) {
+  return useQuery(['customers'], fetchCustomers, options)
 }
 
 export function useCreateCustomer() {
