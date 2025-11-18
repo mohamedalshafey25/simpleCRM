@@ -39,44 +39,73 @@ simple-crm
 
 3. **Install dependencies:**
    ```
+   # Simple CRM
+
+   A small FastAPI-based CRM example (customers, offers, orders, follow-ups).
+
+   ## Development (local)
+
+   1. Create a virtual environment and install requirements:
+
+   ```powershell
+   python -m venv .venv
+   .venv\Scripts\Activate.ps1
    pip install -r requirements.txt
    ```
 
-4. **Run the application:**
-   ```
+   2. Copy `.env.example` to `.env` and edit values if needed.
+
+   3. Run the app:
+
+   ```powershell
+   $env:PYTHONPATH="c:\Users\A store\simple-crm"
    uvicorn app.main:app --reload
    ```
 
-5. **Access the API:**
-   Open your browser and go to `http://127.0.0.1:8000/docs` to view the interactive API documentation.
+   4. Open Swagger UI: http://127.0.0.1:8000/docs
 
-## Usage
+   ## Using Docker (with Postgres)
 
-- Use the API endpoints to manage customers, offers, orders, and follow-ups.
-- Refer to the API documentation for detailed information on available endpoints and their usage.
+   ```powershell
+   docker-compose up --build
+   ```
 
-## Contributing
+   This runs Postgres and the FastAPI app. The web service uses the `DATABASE_URL` environment variable.
 
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+   ## Database migrations (Alembic)
 
-## License
+   Install alembic (if not installed):
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+   ```powershell
+   pip install alembic
+   ```
 
+   Create a new migration (auto):
 
-# مشروع نظام إدارة العملاء والمبيعات البسيط (Simple CRM)
+   ```powershell
+   alembic revision --autogenerate -m "message"
+   ```
 
-## الهدف
-إنشاء تطبيق ويب يعتمد على جداول بيانات علائقية (Relational Database) لإدارة العملاء، العروض، الطلبات، والمتابعات.
+   Apply migrations:
 
-## التقنيات المطلوبة
-1.  **Backend:** Python 3.10+
-2.  **Web Framework:** FastAPI
-3.  **Database:** SQLite (باستخدام ملف محلي `crm.db`)
-4.  **ORM:** SQLAlchemy (لإدارة الجداول والعلاقات)
+   ```powershell
+   alembic upgrade head
+   ```
 
-## تفاصيل الجداول العلائقية (SQLAlchemy Models)
-1.  **Customer:** `id`, `name`, `email`, `phone`, `referrer_id` (Self-referential link to another Customer).
-2.  **Offer:** `id`, `customer_id`, `title`, `amount`, `status`.
-3.  **Order:** `id`, `customer_id`, `offer_id` (Optional link), `total_amount`, `order_date`.
-4.  **FollowUp:** `id`, `customer_id`, `followup_date`, `notes`, `is_completed`.
+   The repository includes an initial migration at `alembic/versions/0001_initial.py`.
+
+   ## Frontend
+
+   There's a minimal placeholder in `frontend/` demonstrating how the UI might call the API.
+
+   ## Notes
+
+   - CORS is enabled for `http://localhost:3000` to ease local frontend development.
+   - Configuration is read from environment variables or `.env` using `app/core/config.py`.
+   - Consider using Postgres in production instead of SQLite.
+
+   ## Contributing
+
+   Contributions welcome — open an issue or PR.
+
+   ---
