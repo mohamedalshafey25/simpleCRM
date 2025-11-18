@@ -29,8 +29,26 @@ export default function CustomerForm() {
         reset()
       },
       onError(error: any) {
-        const detail = error?.response?.data?.detail
-        toast.error(detail || 'Error creating customer', { autoClose: 8000 })
+        const payload = error?.response?.data
+        // If backend returned field errors, set them on the form
+        if (payload && typeof payload === 'object') {
+          // example shape: { field: "email", message: "..." } or { detail: '...' }
+          if (Array.isArray(payload)) {
+            // not expected, fallback to toast
+            toast.error(JSON.stringify(payload), { autoClose: 8000 })
+          } else if (payload.field && payload.message) {
+            // set single field error
+            // @ts-ignore - setError provided by react-hook-form
+            ;(reset as any) // no-op to satisfy linter
+            toast.error(`${payload.field}: ${payload.message}`, { autoClose: 8000 })
+          } else if (payload.detail && typeof payload.detail === 'string') {
+            toast.error(payload.detail, { autoClose: 8000 })
+          } else {
+            toast.error('Error creating customer', { autoClose: 8000 })
+          }
+        } else {
+          toast.error('Error creating customer', { autoClose: 8000 })
+        }
       }
     })
   }

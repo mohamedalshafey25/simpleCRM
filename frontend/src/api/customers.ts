@@ -24,7 +24,25 @@ export function useCustomers() {
 export function useCreateCustomer() {
   const qc = useQueryClient()
   return useMutation(postCustomer, {
-    onSuccess() {
+    // Optimistic update: add the new customer to cache immediately
+    async onMutate(newCustomer) {
+      await qc.cancelQueries(['customers'])
+      const previous = qc.getQueryData<Customer[]>(['customers'])
+      const optimisticCustomer: Customer = {
+        id: Date.now(),
+        name: newCustomer.name,
+        email: newCustomer.email
+      }
+      qc.setQueryData(['customers'], (old: Customer[] | undefined) => (old ? [optimisticCustomer, ...old] : [optimisticCustomer]))
+      return { previous }
+    },
+    onError(_err, _newCustomer, context: any) {
+      // rollback
+      if (context?.previous) {
+        qc.setQueryData(['customers'], context.previous)
+      }
+    },
+    onSettled() {
       qc.invalidateQueries(['customers'])
     }
   })
