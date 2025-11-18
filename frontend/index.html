@@ -1,20 +1,12 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Simple CRM - Frontend Placeholder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple CRM</title>
   </head>
   <body>
-    <h1>Simple CRM - Frontend Placeholder</h1>
-    <button id="load">Load Customers</button>
-    <pre id="out"></pre>
-
-    <script>
-      document.getElementById('load').addEventListener('click', async () => {
-        const res = await fetch('http://127.0.0.1:8000/customers/');
-        const data = await res.json();
-        document.getElementById('out').textContent = JSON.stringify(data, null, 2);
-      });
-    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
