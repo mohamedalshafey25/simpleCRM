@@ -2,11 +2,20 @@ import React from 'react'
 import { useCustomers } from '../api/customers'
 
 export default function CustomerList() {
-  const { data: customers, isLoading, isError } = useCustomers()
+  const { data: customers, isLoading, isError, refetch } = useCustomers()
 
   return (
     <div className="bg-white p-4 rounded shadow">
-      <h2 className="text-lg font-semibold mb-2">Customers</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold mb-2">Customers</h2>
+        <button
+          className="text-sm bg-blue-500 text-white px-3 py-1 rounded"
+          onClick={() => refetch()}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Loading...' : 'Load Customers'}
+        </button>
+      </div>
       {isLoading && <div>Loading...</div>}
       {isError && <div className="text-red-600">Failed to load customers</div>}
       {!isLoading && customers && customers.length === 0 && <div>No customers</div>}

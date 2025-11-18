@@ -1,5 +1,7 @@
 import React from 'react'
 import CustomersPage from './pages/Customers/CustomersPage'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function App() {
   return (
@@ -10,6 +12,7 @@ export default function App() {
       <main className="p-4">
         <CustomersPage />
       </main>
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   )
 }
